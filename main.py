@@ -1,5 +1,5 @@
 import math
-
+ROUND_VALUE_2 = 2
 ROUND_VALUE_3 = 3
 ROUND_VALUE_6 = 6
 
@@ -39,9 +39,9 @@ def hidden_layer(inputs, weights, index):
         output_sum += input_value * weight
         output_expression += f"({input_value} * {weight}) + "
     
-    result = round(output_sum - bias, ROUND_VALUE_3)
+    result = output_sum - bias
     output_expression = output_expression.rstrip(" + ")
-    print(f"F(v)_{index} = {output_expression} - {bias} = {result}")
+    print(f"F(v)_{index} = {output_expression} - {bias} = {round(result,ROUND_VALUE_6)}")
     
     return result
 
@@ -57,9 +57,9 @@ hidden_outputs = [hidden_output_1, hidden_output_2, hidden_output_3]
 def sigmoid_array(outputs):
     sigmoid_values = []
     for index, output in enumerate(outputs, start=1):
-        sigmoid_value = round(1 / (1 + math.exp(-output)), ROUND_VALUE_6)
-        print(f"Y_h{index} = (1 / (1 + exp(-{output})))")
-        print(f"     = {sigmoid_value}")
+        sigmoid_value = 1 / (1 + math.exp(-output))
+        print(f"Y_h{index} = (1 / (1 + exp(-{round(output,ROUND_VALUE_3)})))")
+        print(f"     = {round(sigmoid_value,ROUND_VALUE_6)}")
         sigmoid_values.append(sigmoid_value)
     return sigmoid_values
 
@@ -74,16 +74,16 @@ def output_layer(Y_h, weights_o,index):
     output = 0
     for yh, w in zip(Y_h, weights_o[:-1]):
         output += yh * w
-        output_str += f"({yh} * {w}) + "
+        output_str += f"({round(yh,ROUND_VALUE_6)} * {w}) + "
     
-    result = round(output - bias,ROUND_VALUE_6)
+    result = output - bias
 
     output_str = output_str.rstrip(" + ")
-    print(f"Y_o{index} = {output_str} - {bias} = {result}")
+    print(f"Y_o{index} = {output_str} - {bias} = {round(result,ROUND_VALUE_6)}")
     
     final_output = 1 / (1 + math.exp(-result))
-    print(f"     = (1 / (1 + exp({result})))")
-    print(f"     = {round(final_output,ROUND_VALUE_6)}")
+    print(f"     = (1 / (1 + exp({round(result,ROUND_VALUE_6)})))")
+    print(f"     = {round(final_output,ROUND_VALUE_3)}")
     
     return final_output
 
@@ -105,8 +105,8 @@ def calculate_desired_output(Y_os, do):
         delta = Y_o * (1 - Y_o) * (T - Y_o)
         result.append(delta)
         
-        print(f"S_o{i+1} = {round(Y_o, ROUND_VALUE_6)} * (1 - {round(Y_o, ROUND_VALUE_6)}) * ({round(T, ROUND_VALUE_6)} - {round(Y_o, ROUND_VALUE_6)})")
-        print(f"     = {round(delta, ROUND_VALUE_6)}")
+        print(f"S_o{i+1} = {round(Y_o, ROUND_VALUE_3)} * (1 - {round(Y_o, ROUND_VALUE_3)}) * ({round(T, ROUND_VALUE_3)} - {round(Y_o, ROUND_VALUE_3)})")
+        print(f"     = {round(delta, ROUND_VALUE_3)}")
         
     return result
 
@@ -121,10 +121,10 @@ def calculate_error_hidden(Y_hs, deltas, Wos):
         delta = yh * (1 - yh) * weighted_sum
         result.append(delta)
         
-        print(f"S_h{i+1} = {yh} * (1 - {yh}) * (", end="")
+        print(f"S_h{i+1} = {round(yh,ROUND_VALUE_6)} * (1 - {round(yh,ROUND_VALUE_3)}) * (", end="")
         value_terms = [f"{round(deltas[j],ROUND_VALUE_3)} * {Wos[j][i]}" for j in range(len(deltas))]
         print(" + ".join(value_terms))
-        print(f"     = {round(delta, ROUND_VALUE_6)}")
+        print(f"     = {round(delta, ROUND_VALUE_3)}")
     
     return result
 
@@ -139,7 +139,7 @@ print("\nOutput Layer")
 def update_weights(weights, deltas, Y_h, learning_rate):
     updated_weights = []
     for i in range(len(weights)):
-        updated_weight = round(weights[i] + learning_rate * deltas[i] * Y_h[i], 3)
+        updated_weight = weights[i] + learning_rate * deltas[i] * Y_h[i]
         updated_weights.append(updated_weight)
     return updated_weights
 
@@ -149,7 +149,7 @@ for index, wo in enumerate(array_wos):
     array_wos[index] = wo_updated  
     
     for j in range(len(wo_updated) - 1):
-        print(f"W_{index + 1}{j + 1}o = {wo[j]} + {n_o} * {deltas[j]} * {sigmoid_results[j]}", end="")
+        print(f"W_{index + 1}{j + 1}o = {wo[j]} + {n_o} * {round(deltas[j],ROUND_VALUE_3)} * {round(sigmoid_results[j],ROUND_VALUE_3)}", end="")
         print(f" = {round(wo[j] + n_o * deltas[j] * sigmoid_results[j], 2)}")
         
     print(f"W_{index + 1}b  = {wo_updated[-1]}\n")
@@ -161,7 +161,7 @@ def update_hidden_weights(weights, deltas, Y_h, learning_rate):
     updated_weights = []
     for i in range(len(weights)):
         if i < len(deltas):  
-            updated_weight = round(weights[i] + learning_rate * deltas[i] * Y_h, 3)
+            updated_weight = weights[i] + learning_rate * deltas[i] * Y_h
         else:
             updated_weight = weights[i]
         updated_weights.append(updated_weight)
@@ -171,13 +171,13 @@ def update_hidden_weights(weights, deltas, Y_h, learning_rate):
 for index, wh in enumerate(array_whs):
     Y_h_value = sigmoid_results[index]  
     wh_updated = update_hidden_weights(wh[:-1], hidden_deltas, Y_h_value, n_h) + [wh[-1]]  
-    array_whs[index] = wh_updated  
+    array_whs[index] = wh_updated
     
     # Print the updated weights
     for j in range(len(wh[:-1])):
         if j < len(hidden_deltas):
-            print(f"W_{index + 1}{j + 1}^h = {wh[j]} + {n_h} * {hidden_deltas[j]} * {Y_h_value}", end="")
-            print(f" = {round(wh[j] + n_h * hidden_deltas[j] * Y_h_value, 2)}")
+            print(f"W_{index + 1}{j + 1}^h = {wh[j]} + {n_h} * {round(hidden_deltas[j],ROUND_VALUE_3)} * {round(Y_h_value,ROUND_VALUE_3)}", end="")
+            print(f" = {round(wh[j] + n_h * hidden_deltas[j] * Y_h_value, ROUND_VALUE_2)}")
         
     print(f"W_{index + 1}b = {wh_updated[-1]}")  # Print bias weight
     print()

@@ -1,5 +1,4 @@
 import math
-ROUND_VALUE_2 = 2
 ROUND_VALUE_3 = 3
 ROUND_VALUE_6 = 6
 
@@ -130,54 +129,3 @@ def calculate_error_hidden(Y_hs, deltas, Wos):
 
 # Calculate hidden layer error deltas
 hidden_deltas = calculate_error_hidden(sigmoid_results, deltas, array_wos)
-
-# Updating the Weights
-print("\nUpdating the Weights")
-print("\nOutput Layer")
-
-# Update output layer weights for all output neurons
-def update_weights(weights, deltas, Y_h, learning_rate):
-    updated_weights = []
-    for i in range(len(weights)):
-        updated_weight = weights[i] + learning_rate * deltas[i] * Y_h[i]
-        updated_weights.append(updated_weight)
-    return updated_weights
-
-# Iterate over all output neurons and update their weights
-for index, wo in enumerate(array_wos):
-    wo_updated = update_weights(wo[:-1], deltas, sigmoid_results, n_o) + [wo[-1]]
-    array_wos[index] = wo_updated  
-    
-    for j in range(len(wo_updated) - 1):
-        print(f"W_{index + 1}{j + 1}o = {wo[j]} + {n_o} * {round(deltas[j],ROUND_VALUE_3)} * {round(sigmoid_results[j],ROUND_VALUE_3)}", end="")
-        print(f" = {round(wo[j] + n_o * deltas[j] * sigmoid_results[j], 2)}")
-        
-    print(f"W_{index + 1}b  = {wo_updated[-1]}\n")
-
-
-print("Hidden Layer")
-# Function to update hidden layer weights
-def update_hidden_weights(weights, deltas, Y_h, learning_rate):
-    updated_weights = []
-    for i in range(len(weights)):
-        if i < len(deltas):  
-            updated_weight = weights[i] + learning_rate * deltas[i] * Y_h
-        else:
-            updated_weight = weights[i]
-        updated_weights.append(updated_weight)
-    return updated_weights
-
-# Iterate over all hidden neurons and update their weights
-for index, wh in enumerate(array_whs):
-    Y_h_value = sigmoid_results[index]  
-    wh_updated = update_hidden_weights(wh[:-1], hidden_deltas, Y_h_value, n_h) + [wh[-1]]  
-    array_whs[index] = wh_updated
-    
-    # Print the updated weights
-    for j in range(len(wh[:-1])):
-        if j < len(hidden_deltas):
-            print(f"W_{index + 1}{j + 1}^h = {wh[j]} + {n_h} * {round(hidden_deltas[j],ROUND_VALUE_3)} * {round(Y_h_value,ROUND_VALUE_3)}", end="")
-            print(f" = {round(wh[j] + n_h * hidden_deltas[j] * Y_h_value, ROUND_VALUE_2)}")
-        
-    print(f"W_{index + 1}b = {wh_updated[-1]}")  # Print bias weight
-    print()

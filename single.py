@@ -57,7 +57,7 @@ while True:
 
             print(f"             w2    = {w2} + ({learning_rate} * {error} * {x2}) = {new_w2}")
           
-            print(f"             w3    = {wb} + ({learning_rate} * {error}) = {new_wb}")
+            print(f"             wb    = {wb} + ({learning_rate} * {error}) = {new_wb}")
 
             # Update the weights and bias
             w1, w2, wb = new_w1, new_w2, new_wb

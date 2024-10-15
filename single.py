@@ -39,8 +39,7 @@ while True:
         step += 1
         print(f"Step {step}:")
         print(f"    x1, x2 = ({x1}, {x2}), target = {target}")
-        print(f"    Formula: v+b = ({x1} * {w1}) + ({x2} * {w2}) - {wb}")
-        print(f"    v+b = ({x1 * w1}) + ({x2 * w2}) - {wb} = {v_plus_b}")
+        print(f"    v+b = ({x1} * {w1}) + ({x2} * {w2}) - {wb} = {v_plus_b}")
 
         print(f"    Output (y) = {output}")
         print(f"    error = ({target}) - ({output}) = {error}")

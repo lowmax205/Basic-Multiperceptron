@@ -10,11 +10,12 @@ classes = [
 
 # Initial values
 threshold = 0
-w1 = 0.7   # weight for input1
-w2 = 0.15  # weight for input2
-wb = 0.9   # bias (threshold)
-learning_rate = 0.13
-max_epochs = 4
+w1 = input("Enter the value of w1: ")   # w1 = 0.7   # weight for input1
+w2 = input("Enter the value of w2: ")   # w2 = 0.15  # weight for input2
+wb = input("Enter the value of wb: ")   # wb = 0.9   # bias (threshold)
+
+learning_rate = input("Enter the value of learning rate: ")   # learning_rate = 0.13
+max_epochs = input("Enter the value of max epochs: ")    # max_epochs = 4
 
 epoch = 1
 

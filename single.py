@@ -69,4 +69,4 @@ while True:
     epoch += 1
     print("---------------------------------------------------------")
 
-print("\nTraining complete!")
+print(f"\nTraining complete! Epoch limited to {max_epochs}.")
